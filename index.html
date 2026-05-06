@@ -5071,7 +5071,54 @@ function createStars() {
   container.innerHTML = html;
 }
 
-function init() {
+function init() {// 알림 권한 요청 버튼 생성
+function requestNotificationPermission() {
+  Notification.requestPermission().then(perm => {
+    if (perm === 'granted') {
+      navigator.serviceWorker.register('/Ghost_app/sw.js')
+        .then(reg => {
+          navigator.serviceWorker.ready.then(r => {
+            r.active?.postMessage({ type: 'SCHEDULE_NOTIFICATIONS' });
+          });
+        });
+      document.getElementById('notif-btn')?.remove();
+    }
+  });
+}
+
+if ('serviceWorker' in navigator && 'Notification' in window) {
+  if (Notification.permission !== 'granted') {
+    const btn = document.createElement('button');
+    btn.id = 'notif-btn';
+    btn.textContent = '🔔 알림 받기';
+    btn.style.cssText = `
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 9999;
+      background: #5A7BA8;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 10px 24px;
+      font-size: 14px;
+      font-family: 'Quicksand', sans-serif;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(90,123,168,0.4);
+    `;
+    btn.onclick = requestNotificationPermission;
+    document.body.appendChild(btn);
+  } else {
+    navigator.serviceWorker.register('/Ghost_app/sw.js')
+      .then(reg => {
+        navigator.serviceWorker.ready.then(r => {
+          r.active?.postMessage({ type: 'SCHEDULE_NOTIFICATIONS' });
+        });
+      });
+  }
+}
   createStars();
   loadState();
   
