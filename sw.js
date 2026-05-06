@@ -69,7 +69,7 @@ self.addEventListener('message', e => {
 function scheduleAll() {
   const now = new Date();
   const times = [
-    { key: 'morning',   h: 21,  m: 23 },
+    { key: 'morning',   h: 21,  m: 25 },
     { key: 'wash',      h: 5,  m: 50 },
     { key: 'cheer',     h: 6,  m: 30 },
     { key: 'planner',   h: 8,  m: 0  },
